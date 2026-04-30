@@ -1,123 +1,198 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { 
   Users, Activity, Calendar, UserPlus, Database, 
   ClipboardList, TrendingUp, Search, Bell, Settings,
-  ChevronRight, LayoutDashboard
+  ChevronRight, LayoutDashboard, Zap, Heart, ShieldCheck, 
+  ArrowUpRight, MapPin, ChevronDown, Check
 } from 'lucide-react';
 
 export default function DashboardSIRST() {
+  // State untuk Dropdown Lokasi
+  const [isLocationOpen, setIsLocationOpen] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState('Semua Lokasi');
+
+  const locations = [
+    'Semua Lokasi', 'Bali', 'Banten', 'DI Yogyakarta', 'DKI Jakarta', 'Jawa Barat'
+  ];
+
   return (
-    <div className="min-h-screen bg-[#F1F5F9] flex font-sans text-slate-900">
+    <div className="min-h-screen bg-[#F8FAFC] flex font-sans text-slate-900 overflow-hidden">
       
-      {/* --- SIDEBAR UPGRADE --- */}
-      <aside className="w-72 bg-emerald-950 text-white flex flex-col shadow-2xl h-screen sticky top-0 overflow-hidden">
+      {/* --- SIDEBAR: GLASSMORPHISM DARK --- */}
+      <aside className="w-80 bg-emerald-950 text-white flex flex-col relative z-50 overflow-hidden">
+        <div className="absolute top-0 -left-20 w-64 h-64 bg-emerald-500/20 blur-[100px] rounded-full"></div>
+        
         {/* Logo Area */}
-        <div className="p-8 text-2xl font-black border-b border-white/5 flex items-center gap-3 bg-emerald-900/20">
-          <div className="bg-emerald-500 p-2 rounded-xl shadow-lg shadow-emerald-500/20">
+        <div className="p-10 text-2xl font-black flex items-center gap-4 relative z-10">
+          <div className="bg-gradient-to-br from-emerald-400 to-teal-600 p-2.5 rounded-2xl shadow-xl shadow-emerald-500/20">
             <Database size={24} className="text-emerald-950" />
           </div>
-          <span className="tracking-tighter">SIRS-T <span className="text-emerald-500 font-light">PRO</span></span>
+          <span className="tracking-tighter">SIRS-T <span className="text-emerald-400 font-light">PRO</span></span>
         </div>
         
-        {/* Navigasi dengan Hover Effect Mewah */}
-        <nav className="flex-1 p-6 space-y-2 mt-4">
-          <p className="text-[10px] font-bold text-emerald-500/50 uppercase tracking-[0.2em] px-4 mb-4">Menu Utama</p>
+        {/* Navigasi Utama */}
+        <nav className="flex-1 px-6 space-y-3 mt-2 relative z-10">
+          <p className="text-[10px] font-black text-emerald-500/40 uppercase tracking-[0.25em] px-4 mb-6">Sistem Navigasi</p>
           
-          <MenuLink href="/" icon={<LayoutDashboard size={20} />} label="Dashboard" active />
-          <MenuLink href="/pasien" icon={<Users size={20} />} label="Data Pasien" />
-          <MenuLink href="/registrasi" icon={<UserPlus size={20} />} label="Registrasi Baru" />
-          <MenuLink href="/rekam_medis" icon={<ClipboardList size={20} />} label="Rekam Medis" />
+          <MenuLink href="/" icon={<LayoutDashboard size={22} />} label="Overview" active />
+          <MenuLink href="/pasien" icon={<Users size={22} />} label="Manajemen Pasien" />
+          <MenuLink href="/registrasi" icon={<UserPlus size={22} />} label="Unit Registrasi" />
+          <MenuLink href="/rekam_medis" icon={<ClipboardList size={22} />} label="Data Klinis" />
+          <MenuLink href="/setelan" icon={<Settings size={22} />} label="Konfigurasi" />
         </nav>
 
-        {/* Profil Card di Bawah */}
-        <div className="p-6">
-          <div className="bg-emerald-900/40 rounded-[24px] p-5 border border-white/5 backdrop-blur-sm">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center font-black text-emerald-950 shadow-lg">
-                AG
+        {/* Profil Admin Card */}
+        <div className="p-8 relative z-10">
+          <div className="bg-white/5 rounded-[32px] p-6 border border-white/10 backdrop-blur-xl group hover:bg-white/10 transition-all cursor-pointer">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="relative">
+                <div className="w-12 h-12 bg-gradient-to-tr from-emerald-500 to-emerald-300 rounded-2xl flex items-center justify-center font-black text-emerald-950 text-lg shadow-lg">
+                  AG
+                </div>
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-4 border-emerald-950 rounded-full"></div>
               </div>
-              <div>
-                <p className="text-[10px] text-emerald-400 font-bold uppercase leading-none mb-1">Administrator</p>
-                <p className="text-sm font-black text-white leading-none">Agi Abdul Gani</p>
+              <div className="overflow-hidden">
+                <p className="text-xs font-black text-white truncate leading-none mb-1 uppercase tracking-tight">Agi Abdul Gani</p>
+                <p className="text-[10px] text-emerald-500/70 font-bold uppercase truncate tracking-wider">Super Administrator</p>
               </div>
             </div>
-            <button className="w-full py-2 bg-white/5 hover:bg-white/10 rounded-xl text-[10px] font-bold transition-all border border-white/5 uppercase tracking-widest">
-              Keluar Sistem
+            <button className="w-full py-3 bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-emerald-950 rounded-xl text-[10px] font-black transition-all border border-emerald-500/20 uppercase tracking-[0.15em]">
+              Keluar Sesi
             </button>
           </div>
         </div>
       </aside>
 
-      {/* --- MAIN CONTENT UPGRADE --- */}
-      <main className="flex-1 flex flex-col h-screen overflow-y-auto">
+      {/* --- MAIN CONTENT AREA --- */}
+      <main className="flex-1 flex flex-col h-screen overflow-y-auto relative">
         
-        {/* Top Header */}
-        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-10 sticky top-0 z-50">
-          <div className="relative group w-96">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" size={18} />
-            <input 
-              type="text" 
-              placeholder="Cari data pasien atau dokter..." 
-              className="w-full pl-12 pr-6 py-2.5 bg-slate-100 border-none rounded-2xl text-sm focus:ring-2 focus:ring-emerald-500/20 transition-all outline-none" 
-            />
-          </div>
-          <div className="flex items-center gap-4">
-            <button className="p-2.5 bg-slate-100 rounded-xl text-slate-500 hover:text-emerald-600 transition-all">
-              <Bell size={20} />
-            </button>
-            <div className="h-8 w-[1px] bg-slate-200 mx-2"></div>
-            <div className="flex items-center gap-3">
-               <div className="text-right hidden md:block">
-                  <p className="text-[10px] font-black text-slate-400 uppercase leading-none mb-1">Status Server</p>
-                  <p className="text-[11px] font-bold text-emerald-600 flex items-center justify-end gap-1">
-                    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Terhubung
-                  </p>
-               </div>
+        {/* Top Header Floating */}
+        <header className="h-24 px-10 flex items-center justify-between sticky top-0 z-40 bg-[#F8FAFC]/80 backdrop-blur-xl gap-6">
+          <div className="flex items-center gap-6 flex-1">
+            
+            {/* FITUR DROPDOWN LOKASI */}
+            <div className="relative">
+              <button 
+                onClick={() => setIsLocationOpen(!isLocationOpen)}
+                className="flex items-center gap-4 bg-white px-6 py-3 rounded-2xl border border-slate-200 shadow-sm hover:border-emerald-300 transition-all active:scale-95 min-w-[200px]"
+              >
+                <div className="bg-emerald-100 p-2 rounded-lg text-emerald-600">
+                  <MapPin size={18} />
+                </div>
+                <div className="text-left pr-2">
+                  <p className="text-[10px] font-black text-slate-400 uppercase leading-none mb-1">Lokasi Kerja</p>
+                  <p className="text-sm font-bold text-slate-700 leading-none">{selectedLocation}</p>
+                </div>
+                <ChevronDown size={16} className={`text-slate-400 transition-transform duration-300 ${isLocationOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* Menu Dropdown yang Muncul */}
+              {isLocationOpen && (
+                <div className="absolute top-full mt-3 w-64 bg-white border border-slate-100 shadow-2xl rounded-3xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 z-[60]">
+                  <div className="p-4 border-b border-slate-50">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
+                      <input type="text" placeholder="Cari wilayah..." className="w-full bg-slate-50 pl-9 pr-4 py-2 rounded-xl text-xs outline-none focus:ring-1 focus:ring-emerald-500/20" />
+                    </div>
+                  </div>
+                  <div className="max-h-60 overflow-y-auto p-2">
+                    {locations.map((loc) => (
+                      <div 
+                        key={loc}
+                        onClick={() => {
+                          setSelectedLocation(loc);
+                          setIsLocationOpen(false);
+                        }}
+                        className={`flex items-center justify-between px-4 py-3 rounded-2xl cursor-pointer transition-all ${selectedLocation === loc ? 'bg-emerald-50 text-emerald-600' : 'hover:bg-slate-50 text-slate-600'}`}
+                      >
+                        <span className="text-xs font-bold">{loc}</span>
+                        {selectedLocation === loc && <Check size={14} className="text-emerald-500" />}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
+
+            {/* Search Bar */}
+            <div className="relative group w-full max-w-lg">
+              <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" size={20} />
+              <input 
+                type="text" 
+                placeholder="Cari pasien berdasarkan NIK atau Nama..." 
+                className="w-full pl-14 pr-6 py-4 bg-white shadow-sm border border-slate-200 rounded-2xl text-sm focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none font-medium" 
+              />
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm">
+              <Zap size={16} className="text-orange-500 fill-orange-500" />
+              <span className="text-[11px] font-black uppercase text-slate-600 tracking-tighter italic">V.22 Engine Online</span>
+            </div>
+            <button className="p-3.5 bg-white border border-slate-200 rounded-2xl text-slate-500 hover:text-emerald-600 hover:border-emerald-200 transition-all relative">
+              <Bell size={22} />
+              <span className="absolute top-3 right-3 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+            </button>
           </div>
         </header>
 
-        <div className="p-10 space-y-10">
-          {/* Welcome Area */}
-          <section className="flex justify-between items-end">
+        <div className="p-10 space-y-12 max-w-[1600px] mx-auto w-full">
+          
+          {/* Header Greeting & Action */}
+          <section className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-              <h1 className="text-4xl font-black text-slate-900 tracking-tight leading-none">Selamat Pagi, Agi!</h1>
-              <p className="text-slate-500 mt-3 font-medium">Ini ringkasan aktivitas rumah sakit hari ini.</p>
+              <h1 className="text-5xl font-black text-slate-900 tracking-tighter">Halo, Agi <span className="text-emerald-500">.</span></h1>
+              <p className="text-slate-500 mt-2 font-semibold text-lg italic">Menampilkan data real-time untuk wilayah: <span className="text-emerald-600 uppercase font-black">{selectedLocation}</span></p>
             </div>
-            <Link href="/registrasi">
-              <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 rounded-[20px] font-black flex items-center gap-3 transition-all shadow-xl shadow-emerald-200 hover:-translate-y-1 active:scale-95">
-                <UserPlus size={20} /> PENDAFTARAN BARU
+            <div className="flex items-center gap-4">
+              <button className="bg-white border border-slate-200 p-5 rounded-[24px] font-black text-slate-600 hover:bg-slate-50 transition-all">
+                <Calendar size={24} />
               </button>
-            </Link>
+              <Link href="/registrasi">
+                <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-5 rounded-[24px] font-black flex items-center gap-4 transition-all shadow-2xl shadow-emerald-200 hover:-translate-y-1 active:scale-95 group">
+                  <UserPlus size={22} /> PENDAFTARAN PASIEN <ArrowUpRight className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </button>
+              </Link>
+            </div>
           </section>
           
-          {/* Stats Grid */}
-          <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <StatCard icon={<Users />} label="Total Pasien" val="1,284" sub="+12 hari ini" color="emerald" />
-            <StatCard icon={<Activity />} label="Kapasitas Kamar" val="85%" sub="12 Bed Tersisa" color="blue" />
-            <StatCard icon={<Calendar />} label="Antrean" val="24" sub="Poli Umum" color="orange" />
-            <StatCard icon={<TrendingUp />} label="Kepuasan" val="4.8" sub="Dari 5.0" color="purple" />
+          {/* Dashboard Intelligence Cards */}
+          <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <StatCard icon={<Users />} label="Total Pasien" val="1.422" trend="+12% bulan ini" color="emerald" />
+            <StatCard icon={<Activity />} label="Bed Occupancy" val="78%" trend="14 Bed Tersedia" color="blue" />
+            <StatCard icon={<Heart />} label="Kapasitas Poli" val="92%" trend="Padat" color="red" />
+            <StatCard icon={<ShieldCheck />} label="Keamanan Data" val="100%" trend="Enkripsi Aktif" color="teal" />
           </section>
 
-          {/* Bottom Grid: Chart & Info */}
-          <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 bg-white p-8 rounded-[40px] shadow-sm border border-slate-200/60">
-              <div className="flex justify-between items-center mb-8">
-                <h3 className="font-black text-slate-800 text-xl tracking-tight">Tren Kunjungan Pasien</h3>
-                <select className="bg-slate-50 border-none rounded-xl text-[10px] font-black p-2 outline-none uppercase tracking-widest text-slate-400">
-                  <option>7 Hari Terakhir</option>
+          {/* Analytics & Insight Section */}
+          <section className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            {/* Chart Area */}
+            <div className="lg:col-span-2 bg-white p-10 rounded-[48px] shadow-sm border border-slate-200/60 relative overflow-hidden">
+              <div className="flex justify-between items-center mb-12">
+                <div>
+                  <h3 className="font-black text-slate-900 text-2xl tracking-tight">Tren Kunjungan - {selectedLocation}</h3>
+                  <p className="text-slate-400 text-xs font-bold uppercase mt-1">Laporan Mingguan Unit SIRS</p>
+                </div>
+                <select className="bg-slate-100 border-none rounded-2xl text-[10px] font-black px-4 py-3 outline-none uppercase tracking-widest text-slate-500">
+                  <option>Januari - April 2026</option>
                 </select>
               </div>
-              <div className="flex items-end justify-between gap-4 h-48 px-2">
-                {[40, 70, 45, 90, 65, 80, 50].map((h, i) => (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-3 group">
-                    <div 
-                      className={`w-full rounded-t-2xl transition-all duration-500 group-hover:brightness-110 shadow-lg ${i === 3 ? 'bg-emerald-500 shadow-emerald-200' : 'bg-slate-100 group-hover:bg-emerald-200'}`} 
-                      style={{ height: `${h}%` }}
-                    ></div>
-                    <span className={`text-[10px] font-black uppercase ${i === 3 ? 'text-emerald-600' : 'text-slate-400'}`}>
+              
+              <div className="flex items-end justify-between gap-6 h-64 px-4 relative z-10">
+                {[50, 85, 45, 100, 75, 90, 60].map((h, i) => (
+                  <div key={i} className="flex-1 flex flex-col items-center gap-4 group">
+                    <div className="relative w-full flex justify-center items-end h-full">
+                       <div 
+                        className={`w-full max-w-[40px] rounded-2xl transition-all duration-700 group-hover:scale-x-110 shadow-2xl ${i === 3 ? 'bg-gradient-to-t from-emerald-600 to-emerald-400 shadow-emerald-200' : 'bg-slate-100 group-hover:bg-emerald-100'}`} 
+                        style={{ height: `${h}%` }}
+                      >
+                        {i === 3 && <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] font-black px-2 py-1 rounded-lg">Peak</div>}
+                      </div>
+                    </div>
+                    <span className={`text-[11px] font-black uppercase tracking-tighter ${i === 3 ? 'text-emerald-600' : 'text-slate-400'}`}>
                       {['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'][i]}
                     </span>
                   </div>
@@ -125,30 +200,39 @@ export default function DashboardSIRST() {
               </div>
             </div>
 
-            <div className="bg-emerald-950 p-8 rounded-[40px] text-white shadow-2xl relative overflow-hidden flex flex-col justify-between">
-               <div className="relative z-10">
-                 <h3 className="font-black text-xl mb-6 flex items-center gap-2">
-                    <Bell className="text-emerald-400" size={20} /> Pengumuman
-                 </h3>
-                 <div className="space-y-6">
-                    <div className="group cursor-pointer">
-                      <p className="text-[10px] font-bold text-emerald-500 uppercase mb-1 tracking-widest">Sistem</p>
-                      <p className="text-sm font-bold group-hover:text-emerald-400 transition-colors underline decoration-emerald-800 underline-offset-4">Update Node.js v22 Berhasil</p>
-                    </div>
-                    <div className="group cursor-pointer">
-                      <p className="text-[10px] font-bold text-orange-500 uppercase mb-1 tracking-widest">Peringatan</p>
-                      <p className="text-sm font-bold group-hover:text-emerald-400 transition-colors underline decoration-emerald-800 underline-offset-4">Stok Paracetamol Menipis</p>
-                    </div>
-                 </div>
-               </div>
-               <div className="mt-8 pt-8 border-t border-white/5 relative z-10">
-                  <button className="flex items-center justify-between w-full font-bold text-xs text-emerald-400 group">
-                    LIHAT SEMUA LOG <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                  </button>
-               </div>
-               {/* Dekorasi Background */}
-               <Database className="absolute -right-10 -bottom-10 w-40 h-40 text-white/5 -rotate-12" />
+            {/* Sidebar Information */}
+            <div className="space-y-8">
+              <div className="bg-emerald-950 p-10 rounded-[48px] text-white shadow-2xl relative overflow-hidden group h-full flex flex-col justify-between">
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-8">
+                    <h3 className="font-black text-xl tracking-tight uppercase">Sistem Log</h3>
+                    <TrendingUp className="text-emerald-400" />
+                  </div>
+                  <div className="space-y-6">
+                    <LogItem status="INFO" msg="Update Database Relasional Selesai" time="2 Menit lalu" />
+                    <LogItem status="WARN" msg="Limit Kapasitas Poli Gigi Terdeteksi" time="15 Menit lalu" />
+                    <LogItem status="SUKS" msg="Sync Cloud Storage Berhasil" time="1 Jam lalu" />
+                  </div>
+                </div>
+                <button className="mt-10 w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl font-black text-xs uppercase tracking-widest transition-all relative z-10">
+                  Buka Konsol Pengembang
+                </button>
+                <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-all"></div>
+              </div>
             </div>
+          </section>
+
+          {/* Quick Shortcuts Section */}
+          <section className="bg-white rounded-[40px] p-10 border border-slate-200">
+             <h3 className="font-black text-slate-800 text-xl mb-8 uppercase tracking-widest">Akses Cepat</h3>
+             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                <Shortcut icon={<ClipboardList />} label="Input Diagnosa" />
+                <Shortcut icon={<Users />} label="Cek Kamar" />
+                <Shortcut icon={<Zap />} label="Rawat Darurat" />
+                <Shortcut icon={<Settings />} label="Konfigurasi" />
+                <Shortcut icon={<Calendar />} label="Jadwal Dokter" />
+                <Shortcut icon={<TrendingUp />} label="Ekspor Laporan" />
+             </div>
           </section>
         </div>
       </main>
@@ -156,43 +240,71 @@ export default function DashboardSIRST() {
   );
 }
 
-// Komponen Pembantu agar kode bersih
+// --- SUB COMPONENTS ---
+
 function MenuLink({ href, icon, label, active = false }) {
   return (
     <Link href={href}>
       <div className={`
-        flex items-center gap-3 p-4 rounded-[20px] transition-all duration-300 cursor-pointer group active:scale-95
+        flex items-center gap-4 p-5 rounded-[24px] transition-all duration-500 cursor-pointer group active:scale-95 relative
         ${active 
-          ? 'bg-emerald-500 text-emerald-950 shadow-lg shadow-emerald-500/20 font-black' 
-          : 'text-emerald-100/50 hover:bg-white/5 hover:text-white hover:pl-6 font-semibold'}
+          ? 'bg-gradient-to-r from-emerald-500/20 to-emerald-500/0 text-emerald-400 font-black' 
+          : 'text-white/40 hover:text-white font-bold'}
       `}>
-        <span className={active ? 'text-emerald-950' : 'group-hover:text-emerald-400'}>{icon}</span>
-        <span className="text-sm">{label}</span>
+        {active && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 bg-emerald-500 rounded-r-full shadow-[0_0_20px_#10b981]"></div>}
+        <span className={`${active ? 'text-emerald-400' : 'group-hover:text-white'} transition-colors`}>{icon}</span>
+        <span className="text-[13px] tracking-tight">{label}</span>
       </div>
     </Link>
   );
 }
 
-function StatCard({ icon, label, val, sub, color }) {
-  const colors = {
-    emerald: 'bg-emerald-500 text-white shadow-emerald-100',
-    blue: 'bg-blue-500 text-white shadow-blue-100',
-    orange: 'bg-orange-500 text-white shadow-orange-100',
-    purple: 'bg-purple-500 text-white shadow-purple-100'
+function StatCard({ icon, label, val, trend, color }) {
+  const themes = {
+    emerald: 'text-emerald-600 bg-emerald-50 ring-emerald-100 shadow-emerald-100',
+    blue: 'text-blue-600 bg-blue-50 ring-blue-100 shadow-blue-100',
+    red: 'text-red-600 bg-red-50 ring-red-100 shadow-red-100',
+    teal: 'text-teal-600 bg-teal-50 ring-teal-100 shadow-teal-100',
   };
-  
+
   return (
-    <div className="bg-white p-7 rounded-[32px] shadow-sm border border-slate-200/60 hover:shadow-xl transition-all duration-500 group">
-      <div className={`w-14 h-14 ${colors[color]} rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-500`}>
+    <div className="bg-white p-8 rounded-[40px] shadow-sm border border-slate-200/60 hover:shadow-2xl transition-all duration-500 group relative overflow-hidden">
+      <div className={`w-16 h-16 rounded-[24px] flex items-center justify-center mb-8 ring-4 ${themes[color]} group-hover:rotate-12 transition-all duration-500`}>
+        {React.cloneElement(icon, { size: 30 })}
+      </div>
+      <p className="text-slate-400 text-xs font-black uppercase tracking-[0.2em] mb-2">{label}</p>
+      <h3 className="text-4xl font-black text-slate-900 tracking-tighter mb-4">{val}</h3>
+      <div className="flex items-center gap-2">
+        <span className={`text-[10px] font-black px-3 py-1 rounded-full ${themes[color]} uppercase`}>{trend}</span>
+      </div>
+    </div>
+  );
+}
+
+function LogItem({ status, msg, time }) {
+  const colors = {
+    INFO: 'bg-blue-500',
+    WARN: 'bg-orange-500',
+    SUKS: 'bg-emerald-500'
+  };
+  return (
+    <div className="flex gap-4 group cursor-default">
+      <div className={`w-1.5 h-12 rounded-full ${colors[status]} opacity-40 group-hover:opacity-100 transition-all`}></div>
+      <div>
+        <p className="text-xs font-black text-white/90 group-hover:text-emerald-400 transition-colors uppercase leading-none mb-1">{msg}</p>
+        <p className="text-[9px] font-bold text-white/30 uppercase tracking-widest">{time}</p>
+      </div>
+    </div>
+  );
+}
+
+function Shortcut({ icon, label }) {
+  return (
+    <div className="flex flex-col items-center gap-4 group cursor-pointer">
+      <div className="w-full aspect-square bg-slate-50 border border-slate-100 rounded-[24px] flex items-center justify-center text-slate-400 group-hover:bg-emerald-50 group-hover:border-emerald-200 group-hover:text-emerald-600 transition-all group-hover:-translate-y-2 shadow-sm">
         {React.cloneElement(icon, { size: 28 })}
       </div>
-      <div>
-        <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.15em] mb-1">{label}</p>
-        <div className="flex items-baseline gap-2">
-          <h3 className="text-3xl font-black text-slate-900 tracking-tight">{val}</h3>
-          <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-lg">{sub}</span>
-        </div>
-      </div>
+      <p className="text-[10px] font-black text-slate-500 group-hover:text-emerald-600 uppercase tracking-tight">{label}</p>
     </div>
   );
 }
