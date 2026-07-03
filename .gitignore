@@ -34,3 +34,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+postgres_data/
+postgres_secondary_data/
+*.pid
